@@ -4,28 +4,17 @@ import Search from 'components/Search';
 import Section from 'components/Section';
 import { filterList } from 'utils/filterList';
 import { MainHeading } from './App.styled';
-import { useEffect, useState } from 'react';
 import ContactList from 'components/ContactList';
 import Notification from 'components/Notification';
-
-const STORAGE_KEY = 'contacts';
-
-const initialContacts = [
-  { id: 'id-1', name: 'Rosie Simpson', tel: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', tel: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', tel: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', tel: '227-91-26' },
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts, getFilter } from '../../redux/selectors';
+import { createContact } from '../../redux/contacts/slice';
 
 const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialContacts
-  );
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const filter = useSelector(getFilter);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
-  }, [contacts]);
+  const contacts = useSelector(getContacts);
 
   const addContact = contact => {
     const hasContact = contacts.some(
@@ -37,13 +26,7 @@ const App = () => {
       return;
     }
 
-    setContacts(prevState => [...prevState, contact]);
-  };
-
-  const onDeleteContactHandler = contactId => {
-    setContacts(prevState => [
-      ...prevState.filter(({ id }) => id !== contactId),
-    ]);
+    dispatch(createContact(contact));
   };
 
   const filteredContacts = filterList('name', contacts, filter);
@@ -59,20 +42,10 @@ const App = () => {
 
       <Container>
         <Section title="Contacts">
-          {contacts.length !== 0 && (
-            <Search
-              value={filter}
-              handler={e => {
-                setFilter(e.target.value);
-              }}
-            />
-          )}
+          {contacts.length !== 0 && <Search />}
 
           {contacts.length !== 0 ? (
-            <ContactList
-              contacts={filteredContacts}
-              onDelete={onDeleteContactHandler}
-            />
+            <ContactList contacts={filteredContacts} />
           ) : (
             <Notification message="No contacts" />
           )}

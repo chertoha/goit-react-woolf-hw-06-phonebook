@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import {
   Field,
@@ -17,7 +16,7 @@ const ContactForm = ({ addContact }) => {
   const onSubmitHandler = e => {
     e.preventDefault();
 
-    addContact({ id: nanoid(4), name, tel });
+    addContact({ name, tel });
     setName('');
     setTel('');
   };

@@ -1,18 +1,22 @@
-import PropTypes from 'prop-types';
 import { Field, Heading, Wrapper } from './Search.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilter } from '../../redux/selectors';
+import { updateFilter } from '../../redux/filter/slice';
 
-const Search = ({ value, handler }) => {
+const Search = () => {
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const onFilterChange = e => {
+    dispatch(updateFilter(e.target.value));
+  };
+
   return (
     <Wrapper>
       <Heading>Find contacts ny name</Heading>
-      <Field type="text" value={value} onChange={handler} />
+      <Field type="text" value={filter} onChange={onFilterChange} />
     </Wrapper>
   );
 };
 
 export default Search;
-
-Search.propTypes = {
-  value: PropTypes.string.isRequired,
-  handler: PropTypes.func.isRequired,
-};
