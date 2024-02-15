@@ -1,10 +1,10 @@
 import { Field, Heading, Wrapper } from './Search.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilter } from '../../redux/selectors';
+import { selectFilter } from '../../redux/selectors';
 import { updateFilter } from '../../redux/filter/slice';
 
 const Search = () => {
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
 
   const onFilterChange = e => {

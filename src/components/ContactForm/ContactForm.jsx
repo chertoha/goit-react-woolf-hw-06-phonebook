@@ -8,15 +8,30 @@ import {
   LabelValue,
   Submit,
 } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts } from '../../redux/selectors';
+import { createContact } from '../../redux/contacts/slice';
 
 const ContactForm = ({ addContact }) => {
   const [name, setName] = useState('');
   const [tel, setTel] = useState('');
 
+  const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
+
   const onSubmitHandler = e => {
     e.preventDefault();
 
-    addContact({ name, tel });
+    const hasContact = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (hasContact) {
+      alert(`${name} is already in contacts`);
+    } else {
+      dispatch(createContact({ name, tel }));
+    }
+
     setName('');
     setTel('');
   };
